@@ -19,3 +19,5 @@ The template directory structure looks like this:
 
 `3-execute-after`: commands to be executed after
 
+Sample template is provided as `my-template.tar.xz`
+
