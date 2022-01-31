@@ -19,7 +19,7 @@ The template directory structure looks like this:
 
 `3-execute-after`: commands to be executed after
 
-Sample template is provided here: [my-template](my-template.tar.xz)
+Sample template is provided here: [my-template.tar.xz](my-template.tar.xz)
 
 The scrtipt uses rsync transport when available, scp otherwise.
 
