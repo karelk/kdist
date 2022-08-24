@@ -43,7 +43,7 @@ where:
 
 `--all`: execute commands, install, transfer (execute all steps 0,1,2,3)
 
-`--scp`: forces scp for transport
+`--scp`: force scp transport
 
 `--port=NUM`: specify ssh port (if non-standard port is used)
 
