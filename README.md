@@ -41,7 +41,7 @@ where:
 
 `--transfer`: transfer files (skips steps 0,1,3)
 
-`--all`: execute commands, install, transfer
+`--all`: execute commands, install, transfer (execute all steps 0,1,2,3)
 
 `--scp`: forces scp for transport
 
