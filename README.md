@@ -32,7 +32,7 @@ kdist --all my-server.domain.org my-template
 non-standard options can be provided:
 
 ```
-kdist [-aall] [--install] [--transfer] [--scp] [--port=NUM] [--timeout=NUM] server template
+kdist [-all] [--install] [--transfer] [--scp] [--port=NUM] [--timeout=NUM] server template
 ```
 
 where:
