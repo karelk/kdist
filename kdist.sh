@@ -1,9 +1,6 @@
 #!/bin/sh
 
-##############################################################################################################################################################
-##############################################################################################################################################################
-##############################################################################################################################################################
-
+ RET=0
  server=
  dry_run=
  timeout=1
@@ -16,21 +13,15 @@
     exit 1
  fi
 
-##############################################################################################################################################################
-###   functions   ############################################################################################################################################
-##############################################################################################################################################################
-
  list_templates() {
     cd "$kdist_dir"
-    printf "\e[1;31m Templates: "
+    printf "\e[0;38;5;203m Templates: "
     for X in * ; do
-	case "$X" in ([a-z]*) [ -d "$X/1-install" ] || [ -d "$X/2-transfer" ] && printf "\e[1;38;5;34m$X\e[0m\n            " ;; esac
+	if [ -d "$X/1-install" ] || [ -d "$X/2-transfer" ] ; then
+	    printf "\e[1;38;5;33m$X\e[0m\n            "
+	fi
     done
     echo
- }
-
- print_usage() {
-    printf "\n\e[1;31m     Usage:\e[0m kdist \e[0;38;5;177m[--all] [--install] [--transfer] [--scp] [--port=NUM] [--timeout=NUM]\e[0;38;5;214m server\e[1;38;5;33m template\e[0;38;5;177m --dry-run\e[0m\n\n"
  }
 
 ##############################################################################################################################################################
@@ -54,7 +45,7 @@
 	    shift
 	    ;;
 	(--port)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--port\e[0m needs an integer argument in the form of \e[1;31m--port=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--port\e[0m needs a number: \e[0;33m--port=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--port=[0-9]*)
@@ -62,11 +53,11 @@
 	    shift
 	    ;;
 	(--port=?*)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--port\e[0m needs an integer argument in the form of \e[1;31m--port=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--port\e[0m needs a number: \e[0;33m--port=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--port=)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--port\e[0m needs an integer argument in the form of \e[1;31m--port=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--port\e[0m needs a number: \e[0;33m--port=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--scp)
@@ -74,7 +65,7 @@
 	    shift
 	    ;;
 	(--timeout)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--timeout\e[0m needs an integer argument in the form of \e[1;31m--timeout=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--timeout\e[0m needs a number: \e[0;33m--timeout=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--timeout=[0-9]*)
@@ -82,11 +73,11 @@
 	    shift
 	    ;;
 	(--timeout=?*)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--timeout\e[0m needs an integer argument in the form of \e[1;31m--timeout=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--timeout\e[0m needs a number: \e[0;33m--timeout=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--timeout=)
-	    printf '\n\e[1;31m Error: \e[0;38;5;176m--timeout\e[0m needs an integer argument in the form of \e[1;31m--timeout=NUM\e[0m\n\n' >&2
+	    printf '\n\e[1;31m Error:\e[0m option \e[0;33m--timeout\e[0m needs a number: \e[0;33m--timeout=NUM\e[0m\n\n' >&2
 	    exit 1
 	    ;;
 	(--dry-run)
@@ -94,18 +85,18 @@
 	    shift
 	    ;;
 	(-?*)
-	    printf "\n\e[1;31m Error:\e[0m Invalid option: \e[1;31m$1\e[0m\n\n"
+	    printf "\n\e[1;31m Error:\e[0m Invalid option: \e[0;33m$1\e[0m\n\n"
 	    exit 1
 	    ;;
 	("")
 	    if [ -z "$template" ] ; then
-		print_usage
+		printf "\n\e[0;38;5;203m     Usage:\e[1;38;5;196m kdist \e[0;33m[ --all | --install | --transfer ]\e[0m server\e[1;38;5;33m template\e[0;33m --dry-run\e[0m\n\n"
 		list_templates
 		exit 0
 	    fi
 	    break
 	    ;;
-	([a-z0-9_\.-]*)
+	([A-Za-z0-9_\.-]*)
 	    if [ -z "$server" ] ; then
 		server="$1"
 	    elif [ -z "$template" ] ; then
@@ -136,7 +127,7 @@
  fi
 
  if [ "scp" = "$transport" ] && [ "--dry-run" = "$dry_run" ] ; then
-    printf "\n\e[1;31m Error:\e[0m scp transport does not support:\e[0;38;5;176m --dry-run\e[0m\n\n"
+    printf "\n\e[1;31m Error:\e[0m scp transport does not support:\e[0;33m --dry-run\e[0m\n\n"
     exit 1
  fi
 
@@ -161,7 +152,7 @@
 		transport="scp"
 	    else
 		printf "\n\e[1;31m Error:\e[0m ${output}.\n" >&2
-		printf " Cannot continue. Option\e[0;38;5;176m --dry-run\e[0m requires rsync\n\n" >&2
+		printf " Cannot continue. Option\e[0;33m --dry-run\e[0m requires rsync\n\n" >&2
 		exit 1
 	    fi
 	fi
@@ -183,33 +174,36 @@
     if [ -d "$kdist_dir/$template/0-execute-before/" ] ; then
 	files="$(ls $kdist_dir/$template/0-execute-before/)"
 	if [ -n "$files" ] ; then
-	    printf "\n\e[1;37m $server:\e[0;38;5;214m Executing commands:\e[1;37m $dry_run\e[0m\n"
-	    for X in $files ; do
 
-		##############################################################################################################################################
-		for command in "$(cat $kdist_dir/$template/0-execute-before/$X | sed '/^\s*$/d')" ; do   #####################################################
-		##############################################################################################################################################
+	    printf "\n\e[1;37m $server:\e[0;38;5;214m Executing 'BEFORE' commands:\e[1;37m $dry_run\e[0m\n"
 
-		    if [ "--dry-run" = "$dry_run" ] ; then
-			printf "\e[0m   Following commands would be executed:\e[0;38;5;214m $command\e[0m\n"
+	    ##################################################################################################################################################
+	    for X in $files ; do #############################################################################################################################
+	    ##################################################################################################################################################
+
+		if [ "--dry-run" = "$dry_run" ] ; then
+		    printf "\n\e[1;37m $server:\e[0m Following commands would be executed: \e[38;5;214m$X\e[0;33m\n\e[1;38;5;196m\n$(cat $kdist_dir/$template/0-execute-before/$X | sed -r -e '/^(#|$)/d' -e 's/^/    /')\e[0m\n"
+		else
+		    printf "\n\e[1;37m $server:\e[0m executing command: \e[0;38;5;214m$X\e[0;33m\n\e[1;38;5;196m\n$(cat $kdist_dir/$template/0-execute-before/$X | sed -r -e '/^(#|$)/d' -e 's/^/    /')\e[0m\n"
+
+		    OUT=$(cat $kdist_dir/$template/0-execute-before/$X | ssh $port $ssh_opts root@$server 'sh' )
+		    RET=$?
+
+		    printf "\e[48;5;22m"
+		    if [ $RET -eq 0 ] ; then
+			printf "$OUT" | sed 's/^/    /'
+			printf "\e[0m\n\n\e[1;37m $server:\e[0;33m command \e[1;37m$X \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m\n"
 		    else
-			OUT=$(ssh $port $ssh_opts root@$server "$command" 2>&1)
-
-			if [ $? -eq 0 ] ; then
-			    printf "\e[1;37m $server: \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m \e[0;33m$command:\e[0m "
-			    printf "$OUT\n"
-			else
-			    printf "\e[1;37m $server: \e[0;31m[\e[1;31mFailed\e[0;31m]\e[0;33m \e[0;33m$command:\e[0m "
-			    printf "$OUT\n\n"
-			    exit 1
-			fi
+			printf "$OUT" | sed 's/^/    /'
+			printf "\e[0m\n\n\e[1;37m $server:\e[0;33m command \e[1;37m$X \e[0;31m[\e[1;31mFailed\e[0;31m]\e[0;33m\e[0m\n"
+			RET=1
 		    fi
+		fi
 
-		##############################################################################################################################################
-		done   #######################################################################################################################################
-		##############################################################################################################################################
+	    ##################################################################################################################################################
+	    done #############################################################################################################################################
+	    ##################################################################################################################################################
 
-	    done
 	fi
     fi
  fi
@@ -276,7 +270,7 @@
 	    else   ###########################################################################################################################################
 	    ##################################################################################################################################################
 
-		if ! { { { { rsync $dry_run --timeout=$timeout --info=name1,del2 --checksum -rlp -AHX --rsh="ssh -o StrictHostKeyChecking=no -l root $port" $kdist_dir/$template/2-transfer/* ${server}:/ ; echo $? >&3; } | sed -r 's@^([A-Za-z0-9/,._+-]+)@   \x1b[0;38;5;75m/\1\x1b[m@' >&4; } 3>&1; } | { read xs; exit $xs; } } 4>&1 ; then
+		if ! { { { { rsync $dry_run --timeout=$timeout --info=name1,del2 --checksum -rlp --rsh="ssh -o StrictHostKeyChecking=no -l root $port" $kdist_dir/$template/2-transfer/* ${server}:/ ; echo $? >&3; } | sed -r 's@^([A-Za-z0-9/,._+-]+)@   \x1b[0;38;5;75m/\1\x1b[m@' >&4; } 3>&1; } | { read xs; exit $xs; } } 4>&1 ; then
 		    printf "\e[1;37m $server: \e[0;31m[\e[1;31mFailed\e[0;31m]\e[0;33m rsync\e[0m\n\n"
 		    exit 1
 		fi
@@ -301,33 +295,36 @@
     if [ -d "$kdist_dir/$template/3-execute-after/" ] ; then
 	files="$(ls $kdist_dir/$template/3-execute-after/)"
 	if [ -n "$files" ] ; then
-	    printf "\n\e[1;37m $server:\e[0;38;5;214m Executing commands:\e[1;37m $dry_run\e[0m\n"
-	    for X in $files ; do
 
-		##############################################################################################################################################
-		for command in "$(cat $kdist_dir/$template/3-execute-after/$X | sed '/^\s*$/d')" ; do   ######################################################
-		##############################################################################################################################################
+	    printf "\n\e[1;37m $server:\e[0;38;5;214m Executing 'AFTER' commands:\e[1;37m $dry_run\e[0m\n"
 
-		    if [ "--dry-run" = "$dry_run" ] ; then
-			printf "\e[0m   Following commands would be executed:\e[0;38;5;214m $command\e[0m\n"
+	    ##################################################################################################################################################
+	    for X in $files ; do #############################################################################################################################
+	    ##################################################################################################################################################
+
+		if [ "--dry-run" = "$dry_run" ] ; then
+		    printf "\n\e[1;37m $server:\e[0m Following commands would be executed: \e[38;5;214m$X\e[0;33m\n\e[1;38;5;196m\n$(cat $kdist_dir/$template/3-execute-after/$X | sed -r -e '/^(#|$)/d' -e 's/^/    /')\e[0m\n"
+		else
+		    printf "\n\e[1;37m $server:\e[0m executing command: \e[0;38;5;214m$X\e[0;33m\n\e[1;38;5;196m\n$(cat $kdist_dir/$template/3-execute-after/$X | sed -r -e '/^(#|$)/d' -e 's/^/    /')\e[0m\n"
+
+		    OUT=$(cat $kdist_dir/$template/3-execute-after/$X | ssh $port $ssh_opts root@$server 'sh' )
+		    RET=$?
+
+		    printf "\e[48;5;22m"
+		    if [ $RET -eq 0 ] ; then
+			printf "$OUT" | sed 's/^/    /'
+			printf "\e[0m\n\n\e[1;37m $server:\e[0;33m command \e[1;37m$X \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m\n"
 		    else
-			OUT=$(ssh $port $ssh_opts root@$server "$command" 2>&1)
-
-			if [ $? -eq 0 ] ; then
-			    printf "\e[1;37m $server: \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m \e[0;33m$command:\e[0m "
-			    printf "$OUT\n"
-			else
-			    printf "\e[1;37m $server: \e[0;31m[\e[1;31mFailed\e[0;31m]\e[0;33m \e[0;33m$command:\e[0m "
-			    printf "$OUT\n\n"
-			    exit 1
-			fi
+			printf "$OUT" | sed 's/^/    /'
+			printf "\e[0m\n\n\e[1;37m $server:\e[0;33m command \e[1;37m$X \e[0;31m[\e[1;31mFailed\e[0;31m]\e[0;33m\e[0m\n"
+			RET=1
 		    fi
+		fi
 
-		##############################################################################################################################################
-		done   #######################################################################################################################################
-		##############################################################################################################################################
+	    ##################################################################################################################################################
+	    done #############################################################################################################################################
+	    ##################################################################################################################################################
 
-	    done
 	fi
     fi
  fi
@@ -345,7 +342,9 @@
 ###   finish   ###############################################################################################################################################
 ##############################################################################################################################################################
 
- printf "\n\e[1;37m $server: \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m\n\n"
-
- exit 0
+ if [ $RET -eq 0 ] ; then
+    printf "\n\e[1;37m $server: \e[0;32m[\e[1;32mOK\e[0;32m]\e[0m\n\n"
+ else
+    printf "\n\e[1;37m $server:\e[0m some actions returned error: \e[0;38;5;196m[\e[1;38;5;196mFailed\e[0;31m]\e[0;33m\e[0m\n\n"
+ fi
 
